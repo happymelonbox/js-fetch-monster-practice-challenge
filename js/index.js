@@ -2,37 +2,43 @@ document.addEventListener('DOMContentLoaded', function(){
     const monsterContainerUl = document.getElementById('monster-container-ul')
     const backButton = document.getElementById('back')
     const forwardButton = document.getElementById('forward')
+    const monsterForm = document.getElementById('monster-form')
     const URL = 'http://localhost:3000/monsters/?_limit=50&_page='
     const UrlAllMonsters = 'http://localhost:3000/monsters/'
 
     let pageNumber = 1
     let totalMonsters, totalPages
     let displayedPage = document.getElementById('pageNumber')
-    console.log(totalPages)
+    let createMonsterName
+    let createMonsterAge
+    let createMonsterDescription = document.getElementById()
 
     howManyPages()
     fetchData(pageNumber)
     displayedPage.innerHTML = pageNumber
 
-    backButton.addEventListener('click', function(){
-        if(pageNumber > 0){
-        pageNumber = pageNumber - 1
-        fetchData(pageNumber)
-        displayedPage.innerHTML = pageNumber
-        }
-    })
-
-    forwardButton.addEventListener('click', function(){
-        if(pageNumber <= totalPages){
-        pageNumber = (pageNumber + 1)
-        fetchData(pageNumber)
-        displayedPage.innerHTML = pageNumber
-    }})
+    monsterForm.addEventListener('submit', createMonster())
+    backButton.addEventListener('click', pageBack())
+    forwardButton.addEventListener('click', pageForward())
 
     function fetchData(page){
     fetch(`${URL}${page}`)
     .then(resp => resp.json())
     .then(data=> displayMonster(data))
+    }
+    function createMonster(event){
+        event.preventDefault()
+        fetch(URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'name': `${createMonsterName}`,
+                'age': `${createMonsterAge}`,
+                'description': `${createMonsterDescription}`
+            })
+        })
     }
     function displayMonster(obj){
     const monsters = Object.values(obj)
@@ -68,5 +74,18 @@ document.addEventListener('DOMContentLoaded', function(){
             totalMonsters = json.length
             totalPages = totalMonsters/50
         })
+    }
+    function pageForward(){
+        if(pageNumber <= totalPages){
+        pageNumber = (pageNumber + 1)
+        fetchData(pageNumber)
+        displayedPage.innerHTML = pageNumber
+    }}
+    function pageBack(){
+        if(pageNumber > 0){
+        pageNumber = pageNumber - 1
+        fetchData(pageNumber)
+        displayedPage.innerHTML = pageNumber
+        }
     }
 })
