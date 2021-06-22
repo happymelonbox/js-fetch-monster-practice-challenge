@@ -7,17 +7,14 @@ document.addEventListener('DOMContentLoaded', function(){
     const UrlAllMonsters = 'http://localhost:3000/monsters/'
 
     let pageNumber = 1
-    let totalMonsters, totalPages
+    let totalMonsters, totalPages, createMonsterName, createMonsterAge, createMonsterDescription
     let displayedPage = document.getElementById('pageNumber')
-    let createMonsterName
-    let createMonsterAge
-    let createMonsterDescription = document.getElementById()
 
     howManyPages()
     fetchData(pageNumber)
     displayedPage.innerHTML = pageNumber
 
-    monsterForm.addEventListener('submit', createMonster())
+    monsterForm.addEventListener('submit', function(event){createMonster(event)})
     backButton.addEventListener('click', pageBack())
     forwardButton.addEventListener('click', pageForward())
 
@@ -28,7 +25,10 @@ document.addEventListener('DOMContentLoaded', function(){
     }
     function createMonster(event){
         event.preventDefault()
-        fetch(URL, {
+        createMonsterName = document.getElementById('inputName').value
+        createMonsterAge = document.getElementById('inputAge').value
+        createMonsterDescription = document.getElementById('inputDescription').value
+        fetch(UrlAllMonsters, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
