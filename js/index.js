@@ -7,37 +7,56 @@ document.addEventListener('DOMContentLoaded', function(){
     const UrlAllMonsters = 'http://localhost:3000/monsters/'
 
     let pageNumber = 1
-    let totalMonsters, totalPages, createMonsterName, createMonsterAge, createMonsterDescription
+    let totalMonsters
+    let totalPages
+    let createMonsterName
+    let createMonsterAge
+    let createMonsterDescription
     let displayedPage = document.getElementById('pageNumber')
 
     howManyPages()
     fetchData(pageNumber)
     displayedPage.innerHTML = pageNumber
 
-    monsterForm.addEventListener('submit', function(event){createMonster(event)})
     backButton.addEventListener('click', pageBack())
     forwardButton.addEventListener('click', pageForward())
+    monsterForm.addEventListener('submit', function(e){
+        e.preventDefault()
+        createMonster()
+    })
 
     function fetchData(page){
     fetch(`${URL}${page}`)
     .then(resp => resp.json())
     .then(data=> displayMonster(data))
     }
-    function createMonster(event){
-        event.preventDefault()
+    function createMonster(){
         createMonsterName = document.getElementById('inputName').value
         createMonsterAge = document.getElementById('inputAge').value
         createMonsterDescription = document.getElementById('inputDescription').value
-        fetch(UrlAllMonsters, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                'name': `${createMonsterName}`,
-                'age': `${createMonsterAge}`,
-                'description': `${createMonsterDescription}`
-            })
+        fetch(UrlAllMonsters)
+        .then((resp)=>resp.json())
+        .then((data)=>{
+            if (Object.values(data).includes(`${createMonsterName}`) && Object.values(data).includes(`${createMonsterAge}`) && Object.values(data).includes(`${createMonsterDescription}`)){
+                console.log('Object exists')
+            } else {
+                fetch(`${UrlAllMonsters}`, {
+                    method: 'POST',
+                    headers: {
+                     'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'name': `${createMonsterName}`,
+                        'age': `${createMonsterAge}`,
+                        'description': `${createMonsterDescription}`
+                    })
+                })
+                .then((resp)=>resp.json())
+                .then((data)=>{
+                let created = document.getElementById('created')
+                created.innerHTML = `Monster '${data.name}' has been added`
+                })
+            }
         })
     }
     function displayMonster(obj){
