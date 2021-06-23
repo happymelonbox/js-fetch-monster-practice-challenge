@@ -47,20 +47,23 @@ document.addEventListener('DOMContentLoaded', function(){
         createMonsterDescription = document.getElementById('inputDescription').value
         fetch(UrlAllMonsters)
         .then(resp=>resp.json())
-        .then((data) => {
-            let monsterObjValues = Object.values(data)
-            console.log(monsterObjValues)
-            for(value in monsterO)
-            let monsterList = []
-            let monsterListName, monsterListDesc, itExists
-            //     monsterListName = monsterList.name,
-            //     monsterListAge = monsterList.age,
-            //     monsterListDesc = monsterList.description
-            //     if(createMonsterName === monsterListName &&
-            //         createMonsterAge === monsterListAge &&
-            //         createMonsterDescription === monsterListDesc){
-            //         return itExists = true
-            //     }
+        .then((newData) => {
+            let monsterObjValues = Object.values(newData)
+            let monsterList, monsterListAge, monsterListName, monsterListDesc
+            let itExists = false
+            for(value in monsterObjValues){
+                monsterList = monsterObjValues[value]
+                monsterListName = monsterList.name,
+                monsterListAge = monsterList.age,
+                monsterListDesc = monsterList.description
+            
+            if  (createMonsterName == monsterListName &&
+                createMonsterAge == monsterListAge &&
+                createMonsterDescription == monsterListDesc){
+
+                return itExists = true
+                }}
+                console.log(itExists)
             
             // if(itExists){
             //     alert(`Monster ${createMonsterName} already exists`
