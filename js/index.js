@@ -18,11 +18,20 @@ document.addEventListener('DOMContentLoaded', function(){
     fetchData(pageNumber)
     displayedPage.innerHTML = pageNumber
 
-    backButton.addEventListener('click', pageBack())
-    forwardButton.addEventListener('click', pageForward())
-    monsterForm.addEventListener('submit', function(e){
-        e.preventDefault()
-        createMonster()
+
+    backButton.addEventListener('click', function pageBack(){
+        if(pageNumber > 0){
+        pageNumber = pageNumber - 1
+        fetchData(pageNumber)
+        displayedPage.innerHTML = pageNumber
+        }
+    })
+    forwardButton.addEventListener('click', function pageForward(){
+        if(pageNumber <= totalPages){
+        pageNumber = (pageNumber + 1)
+        fetchData(pageNumber)
+        displayedPage.innerHTML = pageNumber
+        }
     })
 
     function fetchData(page){
@@ -30,35 +39,51 @@ document.addEventListener('DOMContentLoaded', function(){
     .then(resp => resp.json())
     .then(data=> displayMonster(data))
     }
-    function createMonster(){
+
+    monsterForm.addEventListener('submit', function submitMonster(event){
+        event.preventDefault()
         createMonsterName = document.getElementById('inputName').value
         createMonsterAge = document.getElementById('inputAge').value
         createMonsterDescription = document.getElementById('inputDescription').value
         fetch(UrlAllMonsters)
-        .then((resp)=>resp.json())
-        .then((data)=>{
-            if (Object.values(data).includes(`${createMonsterName}`) && Object.values(data).includes(`${createMonsterAge}`) && Object.values(data).includes(`${createMonsterDescription}`)){
-                console.log('Object exists')
-            } else {
-                fetch(`${UrlAllMonsters}`, {
-                    method: 'POST',
-                    headers: {
-                     'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        'name': `${createMonsterName}`,
-                        'age': `${createMonsterAge}`,
-                        'description': `${createMonsterDescription}`
-                    })
-                })
-                .then((resp)=>resp.json())
-                .then((data)=>{
-                let created = document.getElementById('created')
-                created.innerHTML = `Monster '${data.name}' has been added`
-                })
-            }
+        .then(resp=>resp.json())
+        .then((data) => {
+            let monsterObjValues = Object.values(data)
+            console.log(monsterObjValues)
+            for(value in monsterO)
+            let monsterList = []
+            let monsterListName, monsterListDesc, itExists
+            //     monsterListName = monsterList.name,
+            //     monsterListAge = monsterList.age,
+            //     monsterListDesc = monsterList.description
+            //     if(createMonsterName === monsterListName &&
+            //         createMonsterAge === monsterListAge &&
+            //         createMonsterDescription === monsterListDesc){
+            //         return itExists = true
+            //     }
+            
+            // if(itExists){
+            //     alert(`Monster ${createMonsterName} already exists`
+            // )} 
+            // else {
+            //     console.log(createMonsterName + createMonsterAge + createMonsterDescription)
+            //     fetch(UrlAllMonsters, {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //             Accept: 'application/json'
+            //         },
+            //         body: JSON.stringify({
+            //             name: `${createMonsterName}`,
+            //             age: `${createMonsterAge}`,
+            //             description: `${createMonsterDescription}`
+            //         })
+            //     })
+            //     .then(resp=>resp.json())
+            //     .then(data=>console.log(data))
+            // }
         })
-    }
+    })
     function displayMonster(obj){
     const monsters = Object.values(obj)
     let monster, mCListItem, monsterName, monsterDetails, monsterAge, monsterDescription
@@ -93,18 +118,5 @@ document.addEventListener('DOMContentLoaded', function(){
             totalMonsters = json.length
             totalPages = totalMonsters/50
         })
-    }
-    function pageForward(){
-        if(pageNumber <= totalPages){
-        pageNumber = (pageNumber + 1)
-        fetchData(pageNumber)
-        displayedPage.innerHTML = pageNumber
-    }}
-    function pageBack(){
-        if(pageNumber > 0){
-        pageNumber = pageNumber - 1
-        fetchData(pageNumber)
-        displayedPage.innerHTML = pageNumber
-        }
     }
 })
