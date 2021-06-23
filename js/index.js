@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
     backButton.addEventListener('click', function pageBack(){
-        if(pageNumber > 0){
+        if(pageNumber > 1){
         pageNumber = pageNumber - 1
         fetchData(pageNumber)
         displayedPage.innerHTML = pageNumber
